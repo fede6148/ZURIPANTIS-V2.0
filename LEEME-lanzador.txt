@@ -1,0 +1,30 @@
+CÓMO USAR EL LANZADOR
+======================
+
+1. Copiá el archivo "iniciar-zuripantis.bat" a la carpeta raíz del
+   proyecto (donde está package.json e index.js).
+
+2. Hacé doble clic en "iniciar-zuripantis.bat".
+
+   - La primera vez va a instalar las dependencias solo (puede
+     tardar uno o dos minutos). Las siguientes veces arranca directo.
+   - Se abre una ventana negra que dice "Zuripantis - Servidor":
+     ESA ventana tiene que quedar abierta mientras usás el sistema.
+     Es lo único que hace correr el servidor.
+   - El navegador se abre solo en http://localhost:3000
+
+3. Para CERRAR el sistema: cerrá la ventana negra "Zuripantis - Servidor".
+   Cerrar solo la pestaña del navegador no apaga el servidor.
+
+
+CREAR UN ACCESO DIRECTO EN EL ESCRITORIO (opcional)
+====================================================
+
+1. Click derecho sobre "iniciar-zuripantis.bat" → Enviar a → Escritorio
+   (crear acceso directo).
+
+2. En el Escritorio, podés click derecho sobre el acceso directo →
+   Cambiar icono, si querés ponerle un ícono distinto al genérico.
+
+3. De ahí en más, alcanza con doble clic en ese acceso directo del
+   escritorio para levantar todo el sistema.

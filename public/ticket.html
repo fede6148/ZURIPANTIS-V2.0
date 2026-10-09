@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Zuripantis — Ticket</title>
+  <link rel="stylesheet" href="/css/style.css" />
+  <link rel="stylesheet" href="/css/ticket.css" />
+</head>
+<body>
+
+  <div class="ticket-page">
+
+    <div id="ticket-loading" class="table-empty">Cargando ticket…</div>
+    <div id="ticket-error" class="table-empty" hidden>No se pudo cargar esta venta.</div>
+
+    <div id="ticket" class="ticket" hidden>
+      <header class="ticket__header">
+        <p class="ticket__brand">ZURIPANTIS</p>
+        <p class="ticket__sub">Comprobante de venta</p>
+      </header>
+
+      <p class="ticket__meta">
+        Venta N° <span id="ticket-id"></span><br />
+        <span id="ticket-fecha"></span>
+      </p>
+
+      <p id="ticket-comprador-bloque" class="ticket__meta" hidden>
+        <strong id="ticket-comprador"></strong><br />
+        <span id="ticket-telefono"></span><br />
+        <span id="ticket-direccion"></span>
+      </p>
+
+      <table class="ticket__table">
+        <thead>
+          <tr>
+            <th>Producto</th>
+            <th>Cant.</th>
+            <th>Subtotal</th>
+          </tr>
+        </thead>
+        <tbody id="ticket-items"></tbody>
+      </table>
+
+      <div class="ticket__total">
+        <span>TOTAL</span>
+        <span id="ticket-total"></span>
+      </div>
+
+      <p class="ticket__footer">¡Gracias por tu compra!</p>
+    </div>
+
+    <div class="ticket-actions no-print">
+      <button id="imprimir-btn" class="btn-primary" type="button">Imprimir</button>
+      <a href="/ventas.html" class="btn-secondary" style="text-decoration:none; display:inline-block;">Volver a ventas</a>
+    </div>
+
+  </div>
+
+  <script src="/js/auth-guard.js"></script>
+  <script src="/js/ticket.js"></script>
+</body>
+</html>

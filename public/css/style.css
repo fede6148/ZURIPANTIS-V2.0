@@ -1,0 +1,807 @@
+/* ===================================================================
+   Zuripantis — Panel de control
+   Línea visual: pop-art / cómic, en sintonía con el catálogo de la marca.
+   Tipografías del sistema (sin dependencias externas, funciona offline).
+   =================================================================== */
+
+:root {
+  --ink: #17161a;
+  --paper: #fff7f0;
+  --pink: #ff3e7f;
+  --yellow: #ffc93c;
+  --cyan: #2fd3c6;
+  --red: #e8112d;
+
+  --border: 3px solid var(--ink);
+  --shadow-offset: 6px 6px 0 var(--ink);
+  --shadow-offset-sm: 4px 4px 0 var(--ink);
+
+  --font-display: 'Arial Black', 'Helvetica Neue', Arial, sans-serif;
+  --font-body: 'Segoe UI', Roboto, system-ui, -apple-system, sans-serif;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  background-color: var(--paper);
+  background-image:
+    radial-gradient(var(--ink) 1px, transparent 1px);
+  background-size: 22px 22px;
+  background-position: -11px -11px;
+  color: var(--ink);
+  font-family: var(--font-body);
+  -webkit-font-smoothing: antialiased;
+}
+
+.page {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 28px 20px 64px;
+}
+
+/* ---------- Header ---------- */
+
+.topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 16px;
+  margin-bottom: 32px;
+}
+
+.mainnav {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.mainnav__link {
+  font-family: var(--font-body);
+  font-weight: 700;
+  font-size: 14px;
+  text-decoration: none;
+  color: var(--ink);
+  background: #ffffff;
+  border: 2px solid var(--ink);
+  border-radius: 999px;
+  padding: 8px 18px;
+  box-shadow: 3px 3px 0 var(--ink);
+  cursor: pointer;
+}
+
+.mainnav__link.is-active {
+  background: var(--pink);
+}
+
+.brand {
+  display: flex;
+  flex-direction: column;
+  line-height: 1;
+}
+
+.brand-mark {
+  font-family: var(--font-display);
+  font-size: clamp(28px, 5vw, 40px);
+  letter-spacing: 1px;
+  color: var(--pink);
+  -webkit-text-stroke: 1.5px var(--ink);
+  text-shadow: var(--shadow-offset-sm);
+}
+
+.brand-tag {
+  margin-top: 8px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--ink);
+  opacity: 0.75;
+}
+
+.btn-refresh {
+  font-family: var(--font-body);
+  font-weight: 700;
+  font-size: 14px;
+  background: var(--cyan);
+  color: var(--ink);
+  border: var(--border);
+  border-radius: 999px;
+  padding: 10px 22px;
+  box-shadow: var(--shadow-offset-sm);
+  cursor: pointer;
+  transition: transform 0.08s ease;
+}
+
+.btn-refresh:hover {
+  transform: translate(-2px, -2px);
+  box-shadow: 6px 6px 0 var(--ink);
+}
+
+.btn-refresh:active {
+  transform: translate(2px, 2px);
+  box-shadow: 1px 1px 0 var(--ink);
+}
+
+/* ---------- Estado de carga / error ---------- */
+
+.state-message {
+  text-align: center;
+  padding: 60px 20px;
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.state-message--error {
+  background: var(--paper);
+  border: var(--border);
+  border-radius: 18px;
+  box-shadow: var(--shadow-offset);
+}
+
+.state-message__title {
+  font-family: var(--font-display);
+  color: var(--red);
+  font-size: 20px;
+  margin-bottom: 8px;
+}
+
+.state-message code {
+  background: rgba(23, 22, 26, 0.08);
+  padding: 2px 6px;
+  border-radius: 4px;
+}
+
+.state-message .btn-refresh {
+  margin-top: 18px;
+}
+
+/* ---------- Layout del dashboard ---------- */
+
+.dashboard-content {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 28px;
+}
+
+@media (max-width: 720px) {
+  .dashboard-content {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ---------- Paneles tipo viñeta de cómic ---------- */
+
+.panel {
+  position: relative;
+  background: #ffffff;
+  border: var(--border);
+  border-radius: 16px;
+  padding: 26px 24px;
+  box-shadow: var(--shadow-offset);
+  overflow: hidden;
+}
+
+.panel--tilt-left {
+  transform: rotate(-0.6deg);
+}
+
+.panel--tilt-right {
+  transform: rotate(0.6deg);
+}
+
+.panel__halftone {
+  position: absolute;
+  top: -20px;
+  right: -20px;
+  width: 90px;
+  height: 90px;
+  border-radius: 50%;
+  background-image: radial-gradient(var(--ink) 2px, transparent 2px);
+  background-size: 10px 10px;
+  opacity: 0.15;
+  pointer-events: none;
+}
+
+.panel__header-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-bottom: 4px;
+}
+
+.panel__header-row .panel__title {
+  margin: 0;
+}
+
+.panel__title {
+  font-family: var(--font-display);
+  font-size: 20px;
+  margin: 0 0 4px;
+}
+
+.panel__subtitle {
+  margin: 0 0 18px;
+  font-size: 13px;
+  opacity: 0.7;
+}
+
+/* Panel de ventas: el gesto "hero" del dashboard */
+
+.panel--ventas .panel__title {
+  color: var(--pink);
+}
+
+.panel__hero-number {
+  font-family: var(--font-display);
+  font-size: clamp(44px, 8vw, 64px);
+  margin: 6px 0 0;
+  line-height: 1;
+  color: var(--ink);
+}
+
+.panel__hero-caption {
+  margin: 4px 0 20px;
+  font-size: 13px;
+  font-weight: 600;
+  opacity: 0.7;
+}
+
+.panel__stats {
+  display: flex;
+  gap: 28px;
+  margin: 0;
+}
+
+.panel__stat {
+  display: flex;
+  flex-direction: column;
+}
+
+.panel__stat dt {
+  font-size: 12px;
+  opacity: 0.65;
+  margin-bottom: 4px;
+}
+
+.panel__stat dd {
+  margin: 0;
+  font-size: 22px;
+  font-weight: 700;
+}
+
+/* Panel de stock bajo */
+
+.panel--stock .panel__title {
+  color: var(--red);
+}
+
+.stock-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  max-height: 260px;
+  overflow-y: auto;
+}
+
+.stock-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 10px 14px;
+  background: var(--paper);
+  border: 2px solid var(--ink);
+  border-radius: 10px;
+}
+
+.stock-item__name {
+  font-weight: 600;
+  font-size: 14px;
+}
+
+.stock-item__badge {
+  flex-shrink: 0;
+  font-family: var(--font-display);
+  font-size: 13px;
+  background: var(--yellow);
+  border: 2px solid var(--ink);
+  border-radius: 999px;
+  padding: 3px 12px;
+  white-space: nowrap;
+}
+
+.stock-item__badge--critico {
+  background: var(--red);
+  color: #fff;
+}
+
+.stock-empty {
+  font-size: 14px;
+  font-weight: 600;
+  opacity: 0.75;
+}
+
+/* ---------- Franja de KPIs ---------- */
+
+.strip {
+  grid-column: 1 / -1;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+}
+
+@media (max-width: 720px) {
+  .strip {
+    grid-template-columns: 1fr;
+  }
+}
+
+.strip__item {
+  background: var(--yellow);
+  border: var(--border);
+  border-radius: 14px;
+  padding: 18px 20px;
+  box-shadow: var(--shadow-offset-sm);
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.strip__value {
+  font-family: var(--font-display);
+  font-size: 26px;
+}
+
+.strip__label {
+  font-size: 12px;
+  font-weight: 700;
+  opacity: 0.75;
+}
+
+/* ---------- Accesibilidad ---------- */
+
+.btn-refresh:focus-visible,
+#retry-btn:focus-visible {
+  outline: 3px solid var(--cyan);
+  outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .btn-refresh {
+    transition: none;
+  }
+}
+
+/* ---------- Formularios ---------- */
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.form__row {
+  display: flex;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  flex: 1;
+  min-width: 160px;
+}
+
+.field label {
+  font-size: 12px;
+  font-weight: 700;
+  opacity: 0.75;
+}
+
+.field input,
+.field select,
+.field textarea {
+  font-family: var(--font-body);
+  font-size: 14px;
+  padding: 10px 12px;
+  border: 2px solid var(--ink);
+  border-radius: 10px;
+  background: #ffffff;
+  color: var(--ink);
+}
+
+.field textarea {
+  resize: vertical;
+  min-height: 60px;
+}
+
+.field select {
+  cursor: pointer;
+}
+
+.form__actions {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.popup-overlay[hidden],
+.form__actions[hidden] {
+  display: none;
+}
+
+.btn-primary,
+.btn-secondary,
+.btn-danger {
+  font-family: var(--font-body);
+  font-weight: 700;
+  font-size: 14px;
+  border: var(--border);
+  border-radius: 999px;
+  padding: 10px 22px;
+  box-shadow: var(--shadow-offset-sm);
+  cursor: pointer;
+  transition: transform 0.08s ease;
+}
+
+.btn-primary {
+  background: var(--pink);
+  color: var(--ink);
+}
+
+.btn-secondary {
+  background: #ffffff;
+  color: var(--ink);
+}
+
+.btn-danger {
+  background: var(--red);
+  color: #ffffff;
+}
+
+.btn-primary:hover,
+.btn-secondary:hover,
+.btn-danger:hover {
+  transform: translate(-2px, -2px);
+  box-shadow: 6px 6px 0 var(--ink);
+}
+
+.btn-primary:active,
+.btn-secondary:active,
+.btn-danger:active {
+  transform: translate(2px, 2px);
+  box-shadow: 1px 1px 0 var(--ink);
+}
+
+/* ---------- Tablas ---------- */
+
+.table-wrap {
+  overflow-x: auto;
+}
+
+.data-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14px;
+}
+
+.data-table th,
+.data-table td {
+  text-align: left;
+  padding: 10px 12px;
+  border-bottom: 2px solid var(--ink);
+  white-space: nowrap;
+}
+
+.data-table th {
+  font-family: var(--font-display);
+  font-size: 11px;
+  letter-spacing: 0.3px;
+}
+
+.data-table tr:last-child td {
+  border-bottom: none;
+}
+
+.table-actions {
+  display: flex;
+  gap: 8px;
+}
+
+.icon-btn {
+  border: 2px solid var(--ink);
+  border-radius: 8px;
+  background: #ffffff;
+  padding: 5px 12px;
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+  font-family: var(--font-body);
+  text-decoration: none;
+  color: var(--ink);
+  display: inline-block;
+}
+
+.icon-btn--danger {
+  background: var(--red);
+  color: #ffffff;
+}
+
+/* ---------- Detalle de venta (popup) ---------- */
+
+.detalle-datos {
+  margin: 0 0 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.detalle-datos dt {
+  font-size: 11px;
+  font-weight: 700;
+  opacity: 0.65;
+  margin-bottom: 2px;
+}
+
+.detalle-datos dd {
+  margin: 0;
+  font-size: 14px;
+}
+
+.table-empty {
+  padding: 20px 0;
+  font-size: 14px;
+  font-weight: 600;
+  opacity: 0.7;
+}
+
+/* ---------- Mensajes de feedback ---------- */
+
+.feedback {
+  padding: 12px 16px;
+  border: 2px solid;
+  border-radius: 10px;
+  font-weight: 600;
+  font-size: 14px;
+  margin-bottom: 18px;
+}
+
+.feedback--ok {
+  background: #eafcf4;
+  color: #0b6b52;
+  border-color: #0b6b52;
+}
+
+.feedback--error {
+  background: #fdeceb;
+  color: #a3211b;
+  border-color: #a3211b;
+}
+
+.feedback[hidden] {
+  display: none;
+}
+
+/* ---------- Hint de precio/stock disponible (pantalla de ventas) ---------- */
+
+.autocomplete-list {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  z-index: 20;
+  margin: 4px 0 0;
+  padding: 4px;
+  list-style: none;
+  background: #ffffff;
+  border: 2px solid var(--ink);
+  border-radius: 10px;
+  box-shadow: var(--shadow-offset-sm);
+  max-height: 220px;
+  overflow-y: auto;
+}
+
+.autocomplete-list li {
+  padding: 8px 10px;
+  font-size: 13px;
+  font-weight: 600;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.autocomplete-list li:hover,
+.autocomplete-list li.is-active {
+  background: var(--yellow);
+}
+
+.autocomplete-list li.is-disabled {
+  opacity: 0.5;
+  cursor: default;
+}
+
+.autocomplete-list__empty {
+  padding: 8px 10px;
+  font-size: 13px;
+  opacity: 0.7;
+  cursor: default;
+}
+
+.stock-hint {
+  font-size: 13px;
+  font-weight: 600;
+  opacity: 0.75;
+  margin: -2px 0 0;
+}
+
+/* Nota instructiva estática (distinta del hint dinámico de stock,
+   que necesita pegarse justo debajo de un input). Espaciado positivo
+   fijo, para no depender de margins inline por cada uso. */
+.form-note {
+  font-size: 12px;
+  font-weight: 600;
+  opacity: 0.65;
+  margin: 10px 0 0;
+}
+
+.subtotal-box {
+  background: var(--paper);
+  border: 2px solid var(--ink);
+  border-radius: 10px;
+  padding: 12px 16px;
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+}
+
+.subtotal-box__label {
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.subtotal-box__value {
+  font-family: var(--font-display);
+  font-size: 22px;
+}
+
+/* ---------- Tarjetas de venta (historial en /ventas.html) ---------- */
+
+.ventas-lista {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.venta-card {
+  background: var(--paper);
+  border: 2px solid var(--ink);
+  border-radius: 10px;
+  padding: 14px 16px;
+}
+
+.venta-card__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  font-size: 13px;
+  margin-bottom: 8px;
+}
+
+.venta-card__total {
+  font-family: var(--font-display);
+  font-size: 16px;
+}
+
+.venta-card__items {
+  margin: 0;
+  padding-left: 18px;
+  font-size: 13px;
+}
+
+.venta-card__items li {
+  margin-bottom: 2px;
+}
+
+.venta-card--anulada {
+  opacity: 0.6;
+}
+
+.venta-card--anulada .venta-card__total {
+  text-decoration: line-through;
+}
+
+.venta-card__badge {
+  font-family: var(--font-display);
+  font-size: 10px;
+  background: var(--red);
+  color: #ffffff;
+  border-radius: 999px;
+  padding: 2px 8px;
+  margin-left: 4px;
+}
+
+/* ---------- Popup (alta/edición de productos) ---------- */
+
+.popup-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(23, 22, 26, 0.55);
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  padding: 40px 16px;
+  overflow-y: auto;
+  z-index: 100;
+}
+
+.popup {
+  position: relative;
+  background: #ffffff;
+  border: var(--border);
+  border-radius: 16px;
+  box-shadow: 8px 8px 0 var(--ink);
+  padding: 30px 26px;
+  width: 100%;
+  max-width: 620px;
+}
+
+.popup__close {
+  position: absolute;
+  top: 14px;
+  right: 14px;
+  width: 32px;
+  height: 32px;
+  border: 2px solid var(--ink);
+  border-radius: 50%;
+  background: #ffffff;
+  font-size: 18px;
+  line-height: 1;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.popup__close:hover {
+  background: var(--yellow);
+}
+
+@media (max-width: 720px) {
+  .popup {
+    padding: 24px 18px;
+  }
+}
+
+/* ---------- Badges de estado (historial de ventas) ---------- */
+
+.estado-badge {
+  display: inline-block;
+  font-size: 11px;
+  font-weight: 700;
+  padding: 3px 10px;
+  border-radius: 999px;
+  border: 2px solid var(--ink);
+}
+
+.estado-badge--completed {
+  background: var(--cyan);
+}
+
+.estado-badge--delivered {
+  background: var(--yellow);
+}
+
+.estado-badge--cancelled {
+  background: #ffffff;
+}
+
+.estado-badge--closed {
+  background: var(--red);
+  color: #ffffff;
+}

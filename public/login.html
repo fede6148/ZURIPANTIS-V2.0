@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Zuripantis - Ingresar</title>
+<style>
+  :root { --crema:#fff7f0; --tinta:#17161a; --rosa:#ff3e7f; --amarillo:#ffc93c; --cian:#2fd3c6; }
+  * { box-sizing: border-box; }
+  body { margin:0; min-height:100vh; display:flex; align-items:center; justify-content:center;
+    background: var(--amarillo); font-family: -apple-system, Segoe UI, Roboto, sans-serif; }
+  .card { background: var(--crema); border:4px solid var(--tinta); box-shadow:8px 8px 0 var(--tinta);
+    border-radius:16px; padding:40px; width:100%; max-width:360px; transform: rotate(-1deg); }
+  .card h1 { margin:0 0 24px; text-align:center; color:var(--tinta); font-size:1.6rem; }
+  label { display:block; margin-bottom:6px; font-weight:600; color:var(--tinta); }
+  input { width:100%; padding:10px 12px; margin-bottom:16px; border:3px solid var(--tinta);
+    border-radius:8px; font-size:1rem; }
+  button { width:100%; padding:12px; background:var(--rosa); color:var(--crema); font-weight:700;
+    border:3px solid var(--tinta); border-radius:8px; cursor:pointer; font-size:1rem; }
+  button:hover { background: var(--cian); }
+  #error { color: var(--rosa); font-weight:600; margin-bottom:12px; min-height:1.2em; text-align:center; }
+</style>
+</head>
+<body>
+  <form class="card" id="loginForm">
+    <h1>Zuripantis</h1>
+    <div id="error"></div>
+    <label for="password">Contraseña</label>
+    <input type="password" id="password" required autofocus>
+    <button type="submit">Ingresar</button>
+  </form>
+  <script src="/js/login.js"></script>
+</body>
+</html>

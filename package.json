@@ -1,0 +1,38 @@
+{
+  "name": "Proyecto-ZURIPANTIS",
+  "version": "1.0.0",
+  "description": "Proyecto CRUD con Node.js, Express y better-sqlite3. Este proyecto implementa un sistema de gestión de productos y usuarios, con autenticación y autorización mediante JWT. Además, incluye funcionalidades para importar y exportar datos en formato Excel.",
+  "main": "index.js",
+  "bin": "index.js",
+  "scripts": {
+    "dev": "node --watch index.js",
+    "start": "node index.js",
+    "seed:products": "node src/seeders/products.seeder.js",
+    "seed:users": "node src/seeders/users.seeder.js",
+    "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js",
+    "build:exe": "esbuild index.js --bundle --platform=node --target=node24 --outfile=dist/bundle.cjs --format=cjs && pkg dist/bundle.cjs --target node24-win-x64 --output dist/zuripantis.exe --fallback-to-source"
+  },
+  "keywords": [],
+  "author": "Federico Jose Melgarejo Hermosa",
+  "license": "MIT",
+  "type": "module",
+  "engines": {
+    "node": ">=24.0.0"
+  },
+  "dependencies": {
+    "bcryptjs": "^3.0.3",
+    "body-parser": "^2.2.2",
+    "cors": "^2.8.6",
+    "dotenv": "^17.4.2",
+    "express": "^5.2.1",
+    "jsonwebtoken": "^9.0.3",
+    "multer": "^2.3.0",
+    "xlsx": "https://cdn.sheetjs.com/xlsx-0.20.3/xlsx-0.20.3.tgz"
+  },
+  "devDependencies": {
+    "@yao-pkg/pkg": "^6.22.0",
+    "esbuild": "^0.28.2",
+    "jest": "^30.4.2",
+    "supertest": "^7.2.2"
+  }
+}

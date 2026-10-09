@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Zuripantis — Panel de control</title>
+  <link rel="stylesheet" href="/css/style.css" />
+</head>
+<body>
+
+  <div class="page">
+
+    <header class="topbar">
+      <div class="brand">
+        <span class="brand-mark">ZURIPANTIS</span>
+        <span class="brand-tag">Panel de stock &amp; ventas</span>
+      </div>
+      <nav class="mainnav">
+        <a href="/" class="mainnav__link is-active">Dashboard</a>
+        <a href="/productos.html" class="mainnav__link">Productos</a>
+        <a href="/ventas.html" class="mainnav__link">Ventas</a>
+      </nav>
+      <button id="refresh-btn" class="btn-refresh" type="button">
+        Actualizar
+      </button>
+      <button id="importar-excel-btn" class="btn-secondary" type="button">
+        Actualizar desde Excel
+      </button>
+      <input type="file" id="importar-excel-input" accept=".xlsx,.xls" hidden />
+    </header>
+
+    <div id="import-feedback" class="feedback" hidden style="margin: 0 0 20px;"></div>
+
+    <main id="dashboard" class="dashboard" aria-live="polite">
+
+      <div id="loading-state" class="state-message">
+        Cargando datos del local…
+      </div>
+
+      <div id="error-state" class="state-message state-message--error" hidden>
+        <p class="state-message__title">No se pudo conectar con el servidor</p>
+        <p>Revisá que el sistema esté corriendo (<code>npm run start</code>) e intentá de nuevo.</p>
+        <button id="retry-btn" class="btn-refresh" type="button">Reintentar</button>
+      </div>
+
+      <div id="dashboard-content" class="dashboard-content" hidden>
+
+        <section class="panel panel--ventas panel--tilt-left">
+          <div class="panel__halftone" aria-hidden="true"></div>
+          <h2 class="panel__title">Ventas de hoy</h2>
+
+          <p class="panel__hero-number" id="ventas-total">$0</p>
+          <p class="panel__hero-caption">recaudado hoy</p>
+
+          <dl class="panel__stats">
+            <div class="panel__stat">
+              <dt>Ventas registradas</dt>
+              <dd id="ventas-cantidad">0</dd>
+            </div>
+            <div class="panel__stat">
+              <dt>Unidades vendidas</dt>
+              <dd id="ventas-unidades">0</dd>
+            </div>
+          </dl>
+        </section>
+
+        <section class="panel panel--stock panel--tilt-right">
+          <div class="panel__halftone" aria-hidden="true"></div>
+          <h2 class="panel__title">Stock bajo</h2>
+          <p class="panel__subtitle">Productos con <span id="umbral-stock">5</span> unidades o menos</p>
+
+          <ul id="stock-lista" class="stock-list"></ul>
+
+          <p id="stock-vacio" class="stock-empty" hidden>
+            Todo en orden — ningún producto está por debajo del mínimo.
+          </p>
+        </section>
+
+        <section class="strip">
+          <div class="strip__item">
+            <span class="strip__value" id="kpi-productos">0</span>
+            <span class="strip__label">productos activos</span>
+          </div>
+          <div class="strip__item">
+            <span class="strip__value" id="kpi-unidades-stock">0</span>
+            <span class="strip__label">unidades en stock</span>
+          </div>
+          <div class="strip__item">
+            <span class="strip__value" id="kpi-valor-inventario">$0</span>
+            <span class="strip__label">valor de inventario</span>
+          </div>
+        </section>
+
+      </div>
+
+    </main>
+
+  </div>
+  <script src="/js/auth-guard.js"></script>
+  <script src="/js/dashboard.js"></script>
+</body>
+</html>

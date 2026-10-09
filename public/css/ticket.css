@@ -1,0 +1,114 @@
+/* ===================================================================
+   Zuripantis — Ticket de venta
+   Formato angosto, pensado para imprimirse (impresora térmica o A4).
+   =================================================================== */
+
+.ticket-page {
+  max-width: 380px;
+  margin: 40px auto;
+  padding: 0 16px;
+}
+
+.ticket {
+  background: #ffffff;
+  border: 2px dashed var(--ink);
+  border-radius: 10px;
+  padding: 24px 20px;
+}
+
+.ticket__header {
+  text-align: center;
+  margin-bottom: 14px;
+}
+
+.ticket__brand {
+  font-family: var(--font-display);
+  font-size: 24px;
+  color: var(--pink);
+  margin: 0;
+  -webkit-text-stroke: 1px var(--ink);
+}
+
+.ticket__sub {
+  margin: 4px 0 0;
+  font-size: 12px;
+  font-weight: 600;
+  opacity: 0.75;
+}
+
+.ticket__meta {
+  text-align: center;
+  font-size: 12px;
+  margin: 0 0 16px;
+  padding-bottom: 14px;
+  border-bottom: 1px dashed var(--ink);
+}
+
+.ticket__table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+  margin-bottom: 12px;
+}
+
+.ticket__table th {
+  text-align: left;
+  font-size: 10px;
+  padding-bottom: 6px;
+  border-bottom: 1px solid var(--ink);
+}
+
+.ticket__table td {
+  padding: 5px 0;
+  vertical-align: top;
+}
+
+.ticket__table th:last-child,
+.ticket__table td:last-child {
+  text-align: right;
+}
+
+.ticket__total {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  font-family: var(--font-display);
+  font-size: 20px;
+  border-top: 1px dashed var(--ink);
+  padding-top: 10px;
+  margin-top: 6px;
+}
+
+.ticket__footer {
+  text-align: center;
+  font-size: 12px;
+  font-weight: 600;
+  margin: 18px 0 0;
+  opacity: 0.75;
+}
+
+.ticket-actions {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+  margin-top: 20px;
+}
+
+@media print {
+  .no-print {
+    display: none !important;
+  }
+
+  body {
+    background: #ffffff;
+  }
+
+  .ticket-page {
+    margin: 0;
+    max-width: 100%;
+  }
+
+  .ticket {
+    border: none;
+  }
+}

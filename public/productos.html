@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Zuripantis — Productos</title>
+  <link rel="stylesheet" href="/css/style.css" />
+</head>
+<body>
+
+  <div class="page">
+
+    <header class="topbar">
+      <div class="brand">
+        <span class="brand-mark">ZURIPANTIS</span>
+        <span class="brand-tag">Panel de stock &amp; ventas</span>
+      </div>
+      <nav class="mainnav">
+        <a href="/" class="mainnav__link">Dashboard</a>
+        <a href="/productos.html" class="mainnav__link is-active">Productos</a>
+        <a href="/ventas.html" class="mainnav__link">Ventas</a>
+      </nav>
+    </header>
+
+    <main class="dashboard">
+
+      <section class="panel panel--tilt-right" style="grid-column: 1 / -1;">
+        <div class="panel__halftone" aria-hidden="true"></div>
+
+        <div class="panel__header-row">
+          <h2 class="panel__title">Productos cargados</h2>
+          <button type="button" class="btn-primary" id="abrir-popup-btn">Cargar productos</button>
+        </div>
+
+        <div class="form__row" style="margin-bottom: 18px;">
+          <div class="field" style="flex: 2; min-width: 180px;">
+            <label for="buscar-input">Buscar</label>
+            <input type="text" id="buscar-input" placeholder="Nombre o descripción..." />
+          </div>
+          <div class="field" style="flex: 0 1 150px; min-width: 120px;">
+            <label for="filtro-categoria">Categoría</label>
+            <select id="filtro-categoria">
+              <option value="">Todas</option>
+            </select>
+          </div>
+          <div class="field" style="flex: 0 1 90px; min-width: 80px;">
+            <label for="filtro-talle">Talle</label>
+            <select id="filtro-talle">
+              <option value="">Todos</option>
+            </select>
+          </div>
+          <div class="field" style="flex: 0 1 90px; min-width: 80px;">
+            <label for="filtro-color">Color</label>
+            <select id="filtro-color">
+              <option value="">Todos</option>
+            </select>
+          </div>
+          <div class="field" style="flex: 0;">
+            <label style="display: flex; align-items: center; gap: 8px; font-weight: 600; font-size: 13px; white-space: nowrap; margin-top: 28px;">
+              <input type="checkbox" id="filtro-stock-bajo" style="width: auto;" />
+              Solo stock bajo
+            </label>
+          </div>
+        </div>
+
+        <p id="filtro-resultado" class="form-note"></p>
+
+        <div id="tabla-loading" class="table-empty">Cargando productos…</div>
+        <div id="tabla-error" class="table-empty" hidden>No se pudo conectar con el servidor.</div>
+
+        <div id="tabla-wrap" class="table-wrap" hidden>
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>Nombre</th>
+                <th>Marca</th>
+                <th>Categoría</th>
+                <th>Talle</th>
+                <th>Color</th>
+                <th>Descripción</th>
+                <th>Precio</th>
+                <th>Stock</th>
+                <th>Acciones</th>
+              </tr>
+            </thead>
+            <tbody id="productos-tbody"></tbody>
+          </table>
+        </div>
+
+        <p id="tabla-vacia" class="table-empty" hidden>
+          Todavía no cargaste ningún producto. Usá "Cargar productos" para empezar.
+        </p>
+      </section>
+
+    </main>
+
+  </div>
+
+  <!-- Popup: alta / edición de productos -->
+  <div id="popup-overlay" class="popup-overlay" hidden>
+    <div class="popup" role="dialog" aria-modal="true" aria-labelledby="popup-title">
+      <button type="button" class="popup__close" id="popup-close-btn" aria-label="Cerrar">×</button>
+
+      <h2 class="panel__title" id="popup-title">Nuevo producto</h2>
+      <p class="panel__subtitle" id="popup-subtitle">Cargá los datos y guardá — el formulario queda listo para el siguiente producto</p>
+
+      <div id="form-feedback" class="feedback" hidden></div>
+
+      <form id="producto-form" class="form">
+        <input type="hidden" id="producto-id" value="" />
+
+        <div class="form__row">
+          <div class="field">
+            <label for="producto-nombre">Nombre</label>
+            <input type="text" id="producto-nombre" required placeholder="Conjunto encaje negro" />
+          </div>
+          <div class="field">
+            <label for="producto-precio">Precio</label>
+            <input type="number" id="producto-precio" required min="0.01" step="0.01" placeholder="15000" />
+          </div>
+          <div class="field">
+            <label for="producto-stock">Stock</label>
+            <input type="number" id="producto-stock" required min="0" step="1" placeholder="10" />
+          </div>
+        </div>
+
+        <div class="form__row">
+          <div class="field">
+            <label for="producto-marca">Marca</label>
+            <input type="text" id="producto-marca" placeholder="Sol y Oro, Yamiel..." />
+          </div>
+          <div class="field">
+            <label for="producto-categoria">Categoría</label>
+            <select id="producto-categoria">
+              <option value="">Sin categoría</option>
+              <option value="Mujer adulta">Mujer adulta (confort y encaje)</option>
+              <option value="Mujer adulta plus size">Mujer adulta plus size</option>
+              <option value="Juvenil y adolescente">Juvenil y adolescente</option>
+              <option value="Infantil">Infantil</option>
+            </select>
+          </div>
+          <div class="field">
+            <label for="producto-talle">Talle</label>
+            <input type="text" id="producto-talle" placeholder="S, M, L, único..." />
+          </div>
+        </div>
+
+        <div class="form__row">
+          <div class="field">
+            <label for="producto-color">Color</label>
+            <input type="text" id="producto-color" placeholder="Negro, rojo..." />
+          </div>
+        </div>
+
+        <div class="field">
+          <label for="producto-descripcion">Descripción (opcional)</label>
+          <textarea id="producto-descripcion" placeholder="Talles S a XL, encaje francés..."></textarea>
+        </div>
+
+        <div class="form__actions" id="acciones-nuevo">
+          <button type="submit" class="btn-primary" id="guardar-y-otro-btn">Guardar y cargar otro</button>
+          <button type="button" class="btn-secondary" id="finalizar-carga-btn">Finalizar carga de productos</button>
+        </div>
+
+        <div class="form__actions" id="acciones-edicion" hidden>
+          <button type="submit" class="btn-primary" id="guardar-cambios-btn">Guardar cambios</button>
+          <button type="button" class="btn-secondary" id="cancelar-edicion-btn">Cancelar</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script src="/js/auth-guard.js"></script>
+  <script src="/js/productos.js"></script>
+</body>
+</html>

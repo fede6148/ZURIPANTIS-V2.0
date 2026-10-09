@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Zuripantis — Ventas</title>
+  <link rel="stylesheet" href="/css/style.css" />
+</head>
+<body>
+
+  <div class="page">
+
+    <header class="topbar">
+      <div class="brand">
+        <span class="brand-mark">ZURIPANTIS</span>
+        <span class="brand-tag">Panel de stock &amp; ventas</span>
+      </div>
+      <nav class="mainnav">
+        <a href="/" class="mainnav__link">Dashboard</a>
+        <a href="/productos.html" class="mainnav__link">Productos</a>
+        <a href="/ventas.html" class="mainnav__link is-active">Ventas</a>
+      </nav>
+    </header>
+
+    <main class="dashboard">
+
+      <section class="panel panel--tilt-right" style="grid-column: 1 / -1;">
+        <div class="panel__halftone" aria-hidden="true"></div>
+
+        <div class="panel__header-row">
+          <nav class="mainnav" id="ventas-tabs">
+            <button type="button" class="mainnav__link is-active" data-tab="activas">Últimas ventas</button>
+            <button type="button" class="mainnav__link" data-tab="anuladas">Ventas anuladas</button>
+            <button type="button" class="mainnav__link" data-tab="historial">Historial de ventas</button>
+          </nav>
+          <button type="button" class="btn-primary" id="abrir-venta-btn">Registrar nueva venta</button>
+        </div>
+
+        <div id="tabla-loading" class="table-empty">Cargando ventas…</div>
+        <div id="tabla-error" class="table-empty" hidden>No se pudo conectar con el servidor.</div>
+
+        <!-- Tab: Últimas ventas (activas) -->
+        <div id="tab-activas" class="tab-panel">
+          <p id="activas-vacia" class="table-empty" hidden>No hay ventas activas por ahora.</p>
+          <div id="tabla-activas-wrap" class="table-wrap" hidden>
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>Comprador</th>
+                  <th>Fecha / hora</th>
+                  <th>Monto</th>
+                  <th>Acciones</th>
+                </tr>
+              </thead>
+              <tbody id="activas-tbody"></tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- Tab: Ventas anuladas -->
+        <div id="tab-anuladas" class="tab-panel" hidden>
+          <p id="anuladas-vacia" class="table-empty" hidden>No hay ventas anuladas.</p>
+          <div id="tabla-anuladas-wrap" class="table-wrap" hidden>
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>Comprador</th>
+                  <th>Fecha / hora</th>
+                  <th>Monto</th>
+                  <th>Acciones</th>
+                </tr>
+              </thead>
+              <tbody id="anuladas-tbody"></tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- Tab: Historial de ventas -->
+        <div id="tab-historial" class="tab-panel" hidden>
+          <div class="panel__header-row" style="margin-bottom: 14px; align-items: flex-end;">
+            <div class="field" style="flex: 1; max-width: 320px;">
+              <label for="historial-buscar">Buscar por comprador</label>
+              <input type="text" id="historial-buscar" placeholder="Nombre del comprador..." />
+            </div>
+            <a href="/api/sales/export/excel" class="btn-secondary" style="text-decoration:none; display:inline-block;" download>
+              Exportar a Excel
+            </a>
+          </div>
+          <p id="historial-vacia" class="table-empty" hidden>Todavía no hay ventas registradas.</p>
+          <div id="tabla-historial-wrap" class="table-wrap" hidden>
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>Fecha / hora</th>
+                  <th>Comprador</th>
+                  <th>Monto</th>
+                  <th>Estado</th>
+                  <th></th>
+                </tr>
+              </thead>
+              <tbody id="historial-tbody"></tbody>
+            </table>
+          </div>
+        </div>
+
+      </section>
+
+    </main>
+
+  </div>
+
+  <!-- Popup: Registrar nueva venta -->
+  <div id="venta-popup-overlay" class="popup-overlay" hidden>
+    <div class="popup" role="dialog" aria-modal="true" aria-labelledby="venta-popup-title">
+      <button type="button" class="popup__close" id="venta-popup-close-btn" aria-label="Cerrar">×</button>
+
+      <h2 class="panel__title" style="color: var(--pink);" id="venta-popup-title">Registrar venta</h2>
+      <p class="panel__subtitle">Agregá uno o más productos y después registrá la venta completa</p>
+
+      <div id="form-feedback" class="feedback" hidden></div>
+
+      <div class="form__row" style="align-items: flex-end;">
+        <div class="field" style="position: relative;">
+          <label for="venta-producto-input">Producto</label>
+          <input
+            type="text"
+            id="venta-producto-input"
+            placeholder="Escribí nombre, talle o color..."
+            autocomplete="off"
+          />
+          <input type="hidden" id="venta-producto-id" value="" />
+          <ul id="venta-producto-opciones" class="autocomplete-list" hidden></ul>
+        </div>
+        <div class="field" style="max-width: 120px;">
+          <label for="venta-cantidad">Cantidad</label>
+          <input type="number" id="venta-cantidad" min="1" step="1" value="1" />
+        </div>
+        <div class="field" style="flex: 0;">
+          <button type="button" class="btn-secondary" id="agregar-btn">Agregar a la venta</button>
+        </div>
+      </div>
+      <p class="form-note">
+        Empezá a escribir y elegí de la lista (con el teclado: ↓ ↑ para moverte, Enter para elegir).
+      </p>
+
+      <p id="stock-hint" class="stock-hint"></p>
+
+      <div id="carrito-vacio" class="table-empty" style="padding: 16px 0;">
+        Todavía no agregaste ningún producto a esta venta.
+      </div>
+
+      <div id="carrito-wrap" class="table-wrap" hidden>
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>Producto</th>
+              <th>Cantidad</th>
+              <th>Precio unit.</th>
+              <th>Subtotal</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody id="carrito-tbody"></tbody>
+        </table>
+      </div>
+
+      <div class="subtotal-box" style="margin-top: 16px;">
+        <span class="subtotal-box__label">Total de la venta</span>
+        <span class="subtotal-box__value" id="carrito-total">$0</span>
+      </div>
+
+      <p class="form-note" style="margin-top: 16px;">Datos del comprador (opcional)</p>
+
+      <div class="form__row">
+        <div class="field">
+          <label for="venta-comprador">Comprador</label>
+          <input type="text" id="venta-comprador" placeholder="Nombre del comprador..." />
+        </div>
+        <div class="field">
+          <label for="venta-telefono">Teléfono</label>
+          <input type="text" id="venta-telefono" placeholder="11 2233-4455" />
+        </div>
+      </div>
+
+      <div class="form__row">
+        <div class="field">
+          <label for="venta-direccion">Dirección de entrega</label>
+          <input type="text" id="venta-direccion" placeholder="Calle, número, localidad..." />
+        </div>
+        <div class="field">
+          <label for="venta-metodo-pago">Método de pago</label>
+          <select id="venta-metodo-pago">
+            <option value="">Sin especificar</option>
+            <option value="Efectivo">Efectivo</option>
+            <option value="Transferencia">Transferencia</option>
+            <option value="Tarjeta">Tarjeta</option>
+            <option value="Otro">Otro</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="field">
+        <label for="venta-observaciones">Observaciones</label>
+        <textarea id="venta-observaciones" placeholder="Notas sobre esta venta..."></textarea>
+      </div>
+
+      <p class="form-note">
+        Agregá los productos que quieras uno por uno y, cuando termines, tocá "Registrar venta".
+      </p>
+
+      <div class="form__actions" style="margin-top: 16px;">
+        <button type="button" class="btn-primary" id="registrar-btn">Registrar venta</button>
+        <button type="button" class="btn-secondary" id="vaciar-btn">Vaciar carrito</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Popup: detalle de una venta activa -->
+  <div id="detalle-overlay" class="popup-overlay" hidden>
+    <div class="popup" role="dialog" aria-modal="true" aria-labelledby="detalle-title">
+      <button type="button" class="popup__close" id="detalle-close-btn" aria-label="Cerrar">×</button>
+
+      <h2 class="panel__title" id="detalle-title">Venta #</h2>
+      <p class="panel__subtitle" id="detalle-fecha"></p>
+
+      <div id="detalle-feedback" class="feedback" hidden></div>
+
+      <dl class="detalle-datos">
+        <div><dt>Comprador</dt><dd id="detalle-comprador">—</dd></div>
+        <div><dt>Teléfono</dt><dd id="detalle-telefono">—</dd></div>
+        <div><dt>Dirección de entrega</dt><dd id="detalle-direccion">—</dd></div>
+        <div><dt>Método de pago</dt><dd id="detalle-metodo-pago">—</dd></div>
+        <div><dt>Observaciones</dt><dd id="detalle-observaciones">—</dd></div>
+      </dl>
+
+      <div class="table-wrap">
+        <table class="data-table">
+          <thead>
+            <tr><th>Producto</th><th>Cant.</th><th>Subtotal</th></tr>
+          </thead>
+          <tbody id="detalle-items"></tbody>
+        </table>
+      </div>
+
+      <div class="subtotal-box" style="margin-top: 14px;">
+        <span class="subtotal-box__label">Total</span>
+        <span class="subtotal-box__value" id="detalle-total">$0</span>
+      </div>
+
+      <div class="form__actions" style="margin-top: 20px;">
+        <a href="#" target="_blank" class="icon-btn" id="detalle-ticket-btn">Ver ticket</a>
+        <button type="button" class="btn-secondary" id="detalle-entregar-btn">Marcar entregado</button>
+        <button type="button" class="btn-danger" id="detalle-anular-btn">Anular venta</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="/js/auth-guard.js"></script>
+  <script src="/js/ventas.js"></script>
+</body>
+</html>
